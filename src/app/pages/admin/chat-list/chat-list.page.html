@@ -1,0 +1,56 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/admin/dashboard" text=""></ion-back-button>
+        </ion-buttons>
+        <ion-title>Pesan Masuk</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="chat-list-content">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-state">
+        <ion-spinner color="primary"></ion-spinner>
+        <p>Memuat pesan...</p>
+    </div>
+
+    <!-- Chat List -->
+    <div *ngIf="!isLoading && chatList.length > 0" class="chat-list-wrapper">
+        <ion-list class="chat-list" lines="none">
+            <ion-item *ngFor="let chat of chatList" class="chat-item" button (click)="openChat(chat.student_id)"
+                [class.unread]="chat.unread_count > 0">
+
+                <!-- Avatar -->
+                <div class="chat-avatar" slot="start">
+                    <ion-icon name="person-circle" color="primary"></ion-icon>
+                    <ion-badge *ngIf="chat.unread_count > 0" class="unread-badge" color="danger">
+                        {{ chat.unread_count > 99 ? '99+' : chat.unread_count }}
+                    </ion-badge>
+                </div>
+
+                <!-- Chat Info -->
+                <ion-label>
+                    <h2 class="student-name">{{ chat.student_name }}</h2>
+                    <p class="last-message">{{ chat.last_message }}</p>
+                </ion-label>
+
+                <!-- Time -->
+                <div class="chat-time" slot="end">
+                    <span>{{ getTimeAgo(chat.last_time) }}</span>
+                    <ion-icon name="chevron-forward" class="chevron"></ion-icon>
+                </div>
+            </ion-item>
+        </ion-list>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && chatList.length === 0" class="empty-state">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+        <h2>Belum Ada Pesan</h2>
+        <p>Pesan dari siswa akan muncul di sini</p>
+    </div>
+</ion-content>

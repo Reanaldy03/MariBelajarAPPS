@@ -1,0 +1,236 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start" *ngIf="viewMode === 'form'">
+      <ion-button (click)="cancelRegistration()">
+        <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      <img src="assets/logo.png" alt="Logo" class="header-logo">
+      {{ viewMode === 'list' ? 'Pilih Paket Belajar' : 'Form Pendaftaran' }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg-light">
+
+  <!-- VIEW 1: PACKAGE LIST (CATALOG) -->
+  <div *ngIf="viewMode === 'list'" class="catalog-container">
+    <div class="welcome-text ion-padding">
+      <h2>Mulai Perjalanan Belajarmu</h2>
+      <p>Pilih paket bimbingan yang sesuai dengan kebutuhanmu.</p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-section ion-padding-horizontal">
+      <div class="search-wrapper">
+        <ion-icon name="search-outline" class="search-icon"></ion-icon>
+        <input type="text" class="search-input" placeholder="Cari paket, mata pelajaran..." [(ngModel)]="searchQuery"
+          (input)="onSearchChange($event)">
+        <ion-icon *ngIf="searchQuery" name="close-circle" class="clear-icon" (click)="clearSearch()"></ion-icon>
+      </div>
+    </div>
+
+    <!-- Category Filter Chips -->
+    <div class="category-filter ion-padding-horizontal">
+      <div class="filter-label">Filter Kategori:</div>
+      <div class="chips-container">
+        <ion-chip *ngFor="let cat of categories" [outline]="activeCategory !== cat"
+          [color]="activeCategory === cat ? 'primary' : 'medium'" (click)="selectCategory(cat)" mode="ios">
+          <ion-label>{{ cat }}</ion-label>
+        </ion-chip>
+      </div>
+    </div>
+
+    <div *ngIf="activeCategory" class="filter-banner ion-margin-bottom">
+      <ion-chip color="primary" mode="ios">
+        <ion-label>Kategori: {{ activeCategory }}</ion-label>
+        <ion-icon name="close-circle" (click)="clearFilter()"></ion-icon>
+      </ion-chip>
+    </div>
+
+    <div *ngIf="filteredPackages.length === 0 && !activeCategory && !searchQuery" class="empty-state">
+      <ion-spinner></ion-spinner>
+      <p>Memuat paket...</p>
+    </div>
+
+    <div *ngIf="filteredPackages.length === 0 && (activeCategory || searchQuery)" class="empty-state-card">
+      <div class="empty-icon">
+        <ion-icon name="search-circle-outline"></ion-icon>
+      </div>
+      <h3>Oops! Tidak Ada Paket</h3>
+      <p *ngIf="searchQuery && activeCategory" class="empty-desc">
+        Tidak ditemukan paket untuk "<strong>{{ searchQuery }}</strong>" di kategori "<strong>{{ activeCategory
+          }}</strong>"
+      </p>
+      <p *ngIf="searchQuery && !activeCategory" class="empty-desc">
+        Tidak ditemukan paket dengan kata kunci "<strong>{{ searchQuery }}</strong>"
+      </p>
+      <p *ngIf="!searchQuery && activeCategory" class="empty-desc">
+        Belum ada paket untuk kategori "<strong>{{ activeCategory }}</strong>"
+      </p>
+      <div class="empty-actions">
+        <ion-button fill="outline" (click)="clearSearch()" *ngIf="searchQuery" size="small">
+          <ion-icon name="close-outline" slot="start"></ion-icon>
+          Hapus Pencarian
+        </ion-button>
+        <ion-button fill="outline" (click)="clearFilter()" *ngIf="activeCategory" size="small">
+          <ion-icon name="close-outline" slot="start"></ion-icon>
+          Hapus Filter
+        </ion-button>
+        <ion-button color="primary" (click)="clearSearch(); clearFilter()" size="small">
+          <ion-icon name="grid-outline" slot="start"></ion-icon>
+          Lihat Semua
+        </ion-button>
+      </div>
+    </div>
+
+    <div class="package-grid">
+      <ion-card *ngFor="let pkg of filteredPackages" class="package-card">
+        <div class="card-header">
+          <h3>{{ pkg.name }}</h3>
+          <span class="price">{{ formatPrice(pkg.price) }}</span>
+          <span class="duration">/ {{ pkg.duration }}</span>
+        </div>
+        <ion-card-content>
+          <div class="level-tag">{{ pkg.level }}</div>
+          <p class="subjects">{{ pkg.subjects | slice:0:60 }}{{ pkg.subjects.length > 60 ? '...' : '' }}</p>
+
+          <ion-button expand="block" (click)="selectPackage(pkg)" class="select-btn">
+            Pilih Paket
+            <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- VIEW 2: REGISTRATION FORM -->
+  <div *ngIf="viewMode === 'form'" class="form-container">
+
+    <!-- Selected Package Review -->
+    <ion-card class="selected-package-card">
+      <ion-card-content>
+        <p class="label">Paket Dipilih:</p>
+        <h2>{{ selectedPackage?.name }}</h2>
+        <p class="price">{{ formatPrice(selectedPackage?.price) }} / {{ selectedPackage?.duration }}</p>
+        <div class="change-btn" (click)="cancelRegistration()">Ubah</div>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="form-wrapper">
+      <form [formGroup]="pendaftaranForm" (ngSubmit)="onSubmit()">
+
+        <ion-item lines="none" class="input-item">
+          <ion-label position="stacked">Nama Lengkap Siswa</ion-label>
+          <ion-input formControlName="namaSiswa" readonly color="medium" placeholder="Nama sesuai profil"></ion-input>
+        </ion-item>
+
+        <ion-item lines="none" class="input-item">
+          <ion-label position="stacked">Nomor Telepon / WhatsApp</ion-label>
+          <ion-input type="tel" formControlName="nomorTelepon" readonly color="medium"
+            placeholder="Nomor sesuai profil"></ion-input>
+          <ion-note slot="helper">Data diambil dari profil Anda</ion-note>
+        </ion-item>
+
+        <ion-item lines="none" class="input-item">
+          <ion-label position="stacked">Jenjang Sekolah</ion-label>
+          <ion-select formControlName="tingkatPendidikan" placeholder="Pilih Jenjang">
+            <ion-select-option value="SD">SD</ion-select-option>
+            <ion-select-option value="SMP">SMP</ion-select-option>
+            <ion-select-option value="SMA">SMA</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item lines="none" class="input-item">
+          <ion-label position="stacked">Mata Pelajaran yang Diminati</ion-label>
+          <ion-input formControlName="mataPelajaran" (ionInput)="onMataPelajaranChange($event)"
+            placeholder="Matematika, B. Inggris, dll"></ion-input>
+          <ion-note slot="helper">Maksimal {{ maxMataPelajaran }} pelajaran untuk paket ini</ion-note>
+          <ion-note slot="error" *ngIf="isControlInvalid('mataPelajaran')">Wajib diisi</ion-note>
+        </ion-item>
+
+        <ion-item lines="none" class="input-item">
+          <ion-label position="stacked">Jadwal Pilihan</ion-label>
+          <ion-select formControlName="jadwalPilihan" placeholder="Pilih Waktu">
+            <ion-select-option value="Pagi (08.00 - 12.00)">Pagi (08.00 - 12.00)</ion-select-option>
+            <ion-select-option value="Siang (13.00 - 17.00)">Siang (13.00 - 17.00)</ion-select-option>
+            <ion-select-option value="Malam (18.30 - 20.30)">Malam (18.30 - 20.30)</ion-select-option>
+            <ion-select-option value="Weekend (Sabtu/Minggu)">Weekend (Sabtu/Minggu)</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item lines="none" class="input-item">
+          <ion-label position="stacked">Metode Belajar</ion-label>
+          <ion-select formControlName="metodePembelajaran" placeholder="Pilih Metode">
+            <ion-select-option value="Online (Zoom/GMeet)">Online (Zoom/GMeet)</ion-select-option>
+            <ion-select-option value="Offline (Guru ke Rumah)">Offline (Guru ke Rumah)</ion-select-option>
+            <ion-select-option value="Offline (Datang ke Center)">Offline (Datang ke Center)</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item lines="none" class="input-item">
+          <ion-label position="stacked">Program Khusus (Opsional)</ion-label>
+          <ion-textarea formControlName="programKhusus" rows="2"
+            placeholder="Contoh: Persiapan UTBK, Olimpiade"></ion-textarea>
+        </ion-item>
+
+        <div class="submit-section">
+          <ion-button expand="block" type="submit" [disabled]="pendaftaranForm.invalid" class="submit-btn"
+            shape="round">
+            Daftar Sekarang
+          </ion-button>
+          <p class="terms-text">Dengan mendaftar, Anda menyetujui syarat & ketentuan kami.</p>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- VIEW 3: PAYMENT & CONFIRMATION -->
+  <div *ngIf="viewMode === 'payment'" class="payment-container">
+    <ion-card class="payment-card">
+      <ion-card-header>
+        <ion-card-title>Pembayaran</ion-card-title>
+        <ion-card-subtitle>Selesaikan pembayaran untuk mengaktifkan paket.</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <div class="bank-info">
+          <h3>Transfer ke Rekening:</h3>
+          <div class="bank-account">
+            <!-- Fallback image if asset missing -->
+            <img src="assets/bank-bca.png" alt="BCA" style="height:30px;"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <div class="bank-name" style="display:none;">BANK BCA</div>
+
+            <p class="account-number">123-456-7890</p>
+            <p class="account-name">a.n. MariBelajar Official</p>
+          </div>
+          <p class="amount-info">Total Tagihan: <strong>{{ formatPrice(selectedPackage?.price) }}</strong></p>
+        </div>
+
+        <div class="upload-section">
+          <p>Upload Bukti Transfer (Foto/Screenshot):</p>
+
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" id="file-upload" class="file-input">
+
+          <label for="file-upload" class="file-label" [class.has-file]="selectedFile">
+            <ion-icon [name]="selectedFile ? 'document-text-outline' : 'cloud-upload-outline'"></ion-icon>
+            <span>{{ selectedFile ? selectedFile.name : 'Tap untuk Pilih File' }}</span>
+          </label>
+        </div>
+
+        <ion-button expand="block" (click)="uploadPayment()" [disabled]="!selectedFile" class="submit-btn"
+          shape="round">
+          Kirim Bukti Pembayaran
+        </ion-button>
+
+        <ion-button fill="clear" expand="block" color="medium" (click)="resetAll()" class="cancel-btn">
+          Nanti Saja (Bayar di Tab Riwayat)
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>

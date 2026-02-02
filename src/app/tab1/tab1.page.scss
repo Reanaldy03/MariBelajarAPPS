@@ -1,0 +1,458 @@
+// Variables
+$primary-color: #4A90E2; // Soft Blue
+$primary-gradient: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+$bg-color: #F8F9FA;
+$text-dark: #2C3E50;
+$text-light: #7F8C8D;
+$card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+ion-content {
+  --background: #{$bg-color};
+}
+
+// Header
+.home-toolbar {
+  --background: white;
+  --border-width: 0;
+  padding: 0.5rem 0;
+  // Add safe area padding for status bar
+  padding-top: calc(0.5rem + var(--ion-safe-area-top, 0px));
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+  }
+
+  .user-info {
+    .greeting {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: $text-dark;
+      margin: 0;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: $text-light;
+      margin: 2px 0 0 0;
+    }
+  }
+
+  .header-actions {
+    .avatar-container {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid #E3F2FD;
+      cursor: pointer;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+.main-container {
+  padding: 1rem;
+  padding-bottom: 100px;
+}
+
+// Search Bar
+.search-section {
+  margin-bottom: 1.5rem;
+
+  .search-bar {
+    background: white;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: $card-shadow;
+    border: 1px solid #E9ECEF;
+
+    ion-icon {
+      font-size: 1.25rem;
+      color: $text-light;
+    }
+
+    input {
+      border: none;
+      background: transparent;
+      width: 100%;
+      font-size: 0.95rem;
+      color: $text-dark;
+      outline: none;
+
+      &::placeholder {
+        color: #B2BEC3;
+      }
+    }
+  }
+}
+
+// Banner
+.banner-section {
+  margin-bottom: 2rem;
+
+  .promo-card {
+    background: $primary-gradient;
+    border-radius: 16px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    box-shadow: 0 8px 20px rgba(74, 144, 226, 0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 140px;
+
+    .promo-text {
+      width: 65%;
+      z-index: 2;
+
+      .badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0.75rem 0 1rem 0;
+        line-height: 1.3;
+      }
+
+      .promo-btn {
+        margin: 0;
+        --border-radius: 8px;
+        --padding-start: 1rem;
+        --padding-end: 1rem;
+        font-weight: 600;
+        text-transform: none;
+        height: 32px;
+        font-size: 0.8rem;
+      }
+    }
+
+    .promo-img {
+      position: absolute;
+      right: -20px;
+      bottom: -20px;
+      width: 140px;
+      height: 140px;
+      object-fit: contain;
+      opacity: 0.9;
+      transform: rotate(-10deg);
+      z-index: 1;
+    }
+  }
+}
+
+// Section Title
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: $text-dark;
+    margin: 0;
+  }
+
+  .see-all {
+    font-size: 0.85rem;
+    color: $primary-color;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+// Categories Scroll
+.categories-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.25rem;
+  padding: 0.5rem 1rem 1.5rem 1rem;
+  margin-left: -1rem; // Offset padding
+  margin-right: -1rem;
+  padding-right: 1.5rem; // Ensure last item is visible
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  margin-bottom: 2rem;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 64px; // Ensure good touch target
+
+    .cat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+
+      &:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    span {
+      font-size: 0.75rem;
+      color: $text-dark;
+      font-weight: 600;
+      text-align: center;
+      white-space: nowrap;
+    }
+  }
+
+  // Category Colors
+  .bg-red {
+    background: linear-gradient(135deg, #FF6B6B 0%, #EE5253 100%);
+  }
+
+  .bg-blue {
+    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+  }
+
+  .bg-green {
+    background: linear-gradient(135deg, #1DD1A1 0%, #10AC84 100%);
+  }
+
+  .bg-orange {
+    background: linear-gradient(135deg, #FF9F43 0%, #EE5A24 100%);
+  }
+
+  .bg-purple {
+    background: linear-gradient(135deg, #a55eea 0%, #8854d0 100%);
+  }
+
+  .bg-teal {
+    background: linear-gradient(135deg, #00D2D3 0%, #01A3A4 100%);
+  }
+
+  .bg-yellow {
+    background: linear-gradient(135deg, #feca57 0%, #ff9f43 100%);
+  }
+
+  .bg-brown {
+    background: linear-gradient(135deg, #8d6e63 0%, #6d4c41 100%);
+  }
+}
+
+// Horizontal Scroll
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  padding: 0.5rem 0.25rem 1.5rem 0.25rem; // Bottom padding for shadow
+  margin-left: -0.25rem; // Offset padding
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Package Card
+.package-card {
+  min-width: 220px;
+  max-width: 220px;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: $card-shadow;
+  border: 1px solid #F1F3F5;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  .card-image-placeholder {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+  }
+
+  .item-purple {
+    background: linear-gradient(135deg, #a55eea 0%, #8854d0 100%);
+  }
+
+  .card-content {
+    padding: 1rem;
+
+    .card-badges {
+      margin-bottom: 0.5rem;
+
+      .badge-level {
+        background: #E3F2FD;
+        color: $primary-color;
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: $text-dark;
+      margin: 0 0 0.25rem 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .subjects {
+      font-size: 0.75rem;
+      color: $text-light;
+      margin: 0 0 1rem 0;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2; // Standard property for compatibility
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      height: 2.3em;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .price {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: $text-dark;
+      }
+
+      ion-icon {
+        font-size: 1.75rem;
+      }
+    }
+  }
+}
+
+.empty-packages {
+  width: 100%;
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  color: $text-light;
+  font-size: 0.9rem;
+  border: 1px dashed #CED4DA;
+}
+
+// Skeleton
+.skeleton-card {
+  border: none;
+  box-shadow: none;
+}
+
+// Testimonials
+.testimonial-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.testimonial-item {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  border: 1px solid #F1F3F5;
+  position: relative;
+
+  .quote-icon {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    font-size: 3rem;
+    color: #F1F3F5;
+    font-family: serif;
+    line-height: 1;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: $text-dark;
+    line-height: 1.5;
+    margin: 0 0 1rem 0;
+    font-style: italic;
+    position: relative;
+    z-index: 1;
+  }
+
+  .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .initials {
+      width: 32px;
+      height: 32px;
+      background: $primary-color;
+      color: white;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h5 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin: 0;
+      color: $text-dark;
+    }
+
+    span {
+      font-size: 0.75rem;
+      color: $text-light;
+    }
+  }
+}
+
+.bottom-spacer {
+  height: 20px;
+}

@@ -1,0 +1,138 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-title>Halo, {{ adminName }}</ion-title>
+        <ion-buttons slot="end" class="header-actions">
+            <ion-button (click)="goToChat()" class="icon-btn">
+                <div class="icon-wrapper">
+                    <ion-icon name="notifications-outline"></ion-icon>
+                    <span class="notification-badge"></span>
+                </div>
+            </ion-button>
+            <ion-button (click)="presentProfileMenu($event)" class="profile-btn">
+                <div class="avatar-wrapper">
+                    <img *ngIf="adminAvatar" [src]="adminAvatar" alt="Profile"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                    <ion-icon *ngIf="!adminAvatar" name="person-circle-outline" class="fallback-avatar"></ion-icon>
+                    <ion-icon *ngIf="adminAvatar" name="person-circle-outline" class="fallback-avatar"
+                        style="display:none"></ion-icon>
+                </div>
+                <!-- <ion-icon name="caret-down-outline" size="small" class="caret-icon"></ion-icon> -->
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+
+    <ion-toolbar color="primary">
+        <ion-segment (ionChange)="segmentChanged($event)" [(ngModel)]="segment" mode="ios" scrollable>
+            <ion-segment-button value="students">
+                <ion-label>Kelola Siswa</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="packages">
+                <ion-label>Kelola Paket</ion-label>
+            </ion-segment-button>
+        </ion-segment>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="dashboard-content bg-light">
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <div class="content-wrapper ion-padding">
+
+        <!-- TAB 1: STUDENTS -->
+        <div *ngIf="segment === 'students'">
+            <!-- Stats / Filter (Optional) -->
+
+            <div *ngIf="isLoading" class="ion-text-center ion-padding">
+                <ion-spinner color="primary"></ion-spinner>
+            </div>
+
+            <div *ngIf="!isLoading && pendaftaranList.length === 0" class="empty-state">
+                <ion-icon name="people-outline"></ion-icon>
+                <p>Belum ada data pendaftaran.</p>
+            </div>
+
+            <ion-grid *ngIf="!isLoading">
+                <ion-row>
+                    <ion-col size="12" size-md="6" size-lg="4" *ngFor="let item of pendaftaranList">
+                        <ion-card class="student-card">
+                            <div class="card-status-strip" [class]="item.status"></div>
+                            <ion-card-header>
+                                <div class="header-top">
+                                    <ion-badge
+                                        [color]="item.status === 'active' ? 'success' : (item.status === 'verification' ? 'warning' : 'medium')">
+                                        {{ item.status }}
+                                    </ion-badge>
+                                    <small class="date">{{ item.createdAt }}</small>
+                                </div>
+                                <ion-card-title>{{ item.namaSiswa }}</ion-card-title>
+                                <ion-card-subtitle>{{ item.paket }}</ion-card-subtitle>
+                            </ion-card-header>
+                            <ion-card-content>
+                                <div class="info-row">
+                                    <ion-icon name="call-outline"></ion-icon> {{ item.nomorTelepon }}
+                                </div>
+                                <div class="info-row">
+                                    <ion-icon name="school-outline"></ion-icon> {{ item.tingkatPendidikan }} - {{
+                                    item.mataPelajaran }}
+                                </div>
+                            </ion-card-content>
+
+                            <div class="card-footer">
+                                <ion-button fill="clear" size="small" [routerLink]="['/admin/verification', item.id]">
+                                    Detail & Aksi <ion-icon name="arrow-forward" slot="end"></ion-icon>
+                                </ion-button>
+                            </div>
+                        </ion-card>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+
+        <!-- TAB 2: PACKAGES -->
+        <div *ngIf="segment === 'packages'">
+
+            <ion-card class="action-card" routerLink="/admin/package-form/new" button>
+                <ion-item lines="none" detail>
+                    <ion-icon name="add-circle" slot="start" color="primary" size="large"></ion-icon>
+                    <ion-label>
+                        <h2>Tambah Paket Baru</h2>
+                        <p>Buat paket bimbingan belajar baru</p>
+                    </ion-label>
+                </ion-item>
+            </ion-card>
+
+            <div *ngIf="isLoading" class="ion-text-center ion-padding">
+                <ion-spinner color="primary"></ion-spinner>
+            </div>
+
+            <ion-list lines="none" class="package-list">
+                <ion-item-sliding *ngFor="let pkg of packagesList">
+                    <ion-item class="package-item">
+                        <div slot="start" class="price-box">
+                            <span class="currency">Rp</span>
+                            <span class="amount">{{ pkg.price | number:'1.0-0' }}</span>
+                        </div>
+                        <ion-label>
+                            <h2>{{ pkg.name }}</h2>
+                            <p>{{ pkg.subjects }} | {{ pkg.level }}</p>
+                            <ion-badge color="light" *ngIf="pkg.isActive">Aktif</ion-badge>
+                            <ion-badge color="medium" *ngIf="!pkg.isActive">Non-Aktif</ion-badge>
+                        </ion-label>
+                        <ion-button fill="clear" slot="end" [routerLink]="['/admin/package-form', pkg.id]">
+                            <ion-icon name="create-outline"></ion-icon>
+                        </ion-button>
+                    </ion-item>
+
+                    <ion-item-options side="end">
+                        <ion-item-option color="danger" (click)="pkg.id && deletePackage(pkg.id)">
+                            <ion-icon name="trash"></ion-icon>
+                        </ion-item-option>
+                    </ion-item-options>
+                </ion-item-sliding>
+            </ion-list>
+        </div>
+
+    </div>
+</ion-content>

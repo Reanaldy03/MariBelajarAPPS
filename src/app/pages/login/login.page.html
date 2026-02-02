@@ -1,0 +1,36 @@
+<ion-content class="login-content">
+    <div class="login-container">
+        <div class="logo-section">
+            <img src="assets/logo.png" alt="MariBelajar" class="app-logo">
+            <h1>MariBelajar</h1>
+            <p>Masuk untuk mulai belajar</p>
+        </div>
+
+        <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+            <ion-item class="input-item" lines="none">
+                <ion-icon name="mail-outline" slot="start"></ion-icon>
+                <ion-input [(ngModel)]="email" name="email" type="email" placeholder="Email" required></ion-input>
+            </ion-item>
+
+            <ion-item class="input-item" lines="none">
+                <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+                <ion-input [(ngModel)]="password" name="password" [type]="showPassword ? 'text' : 'password'"
+                    placeholder="Password" required></ion-input>
+                <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="end"
+                    (click)="showPassword = !showPassword" class="password-toggle"></ion-icon>
+            </ion-item>
+
+            <div class="forgot-password">
+                <a href="#">Lupa Password?</a>
+            </div>
+
+            <ion-button expand="block" type="submit" class="login-btn" [disabled]="!loginForm.form.valid">
+                Masuk
+            </ion-button>
+        </form>
+
+        <div class="register-link">
+            <p>Belum punya akun? <a routerLink="/register">Daftar Sekarang</a></p>
+        </div>
+    </div>
+</ion-content>

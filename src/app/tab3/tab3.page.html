@@ -1,0 +1,142 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>Riwayat Pendaftaran</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="loadData()">
+        <ion-icon slot="icon-only" name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg-light">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && pendaftaranList.length === 0">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <h3>Belum Ada Pendaftaran</h3>
+    <p>Anda belum mendaftar paket belajar apapun.</p>
+    <ion-button routerLink="/tabs/tab2" mode="ios">Daftar Sekarang</ion-button>
+  </div>
+
+  <!-- Loading State -->
+  <div class="ion-text-center ion-padding" *ngIf="isLoading">
+    <ion-spinner></ion-spinner>
+    <p>Memuat data...</p>
+  </div>
+
+  <!-- List -->
+  <ion-list *ngIf="!isLoading && pendaftaranList.length > 0" class="history-list" lines="none"
+    style="background:transparent;">
+    <ion-card *ngFor="let item of pendaftaranList" class="history-card">
+      <ion-item lines="none" class="card-header-item">
+        <ion-label>
+          <h2>{{ item.paket | uppercase }}</h2>
+          <p>
+            <ion-icon name="calendar-outline"></ion-icon>
+            {{ formatDate(item.createdAt) }}
+          </p>
+        </ion-label>
+        <div class="status-badge" [class]="getStatusColor(item.status)" slot="end">
+          {{ getStatusLabel(item.status) }}
+        </div>
+      </ion-item>
+
+      <ion-card-content>
+        <!-- Timeline Step Indicator -->
+        <div class="timeline" *ngIf="item.status !== 'rejected'">
+          <!-- Step 1: Daftar -->
+          <div class="step completed">
+            <div class="circle"><ion-icon name="checkmark"></ion-icon></div>
+            <span>Daftar</span>
+          </div>
+
+          <!-- Step 2: Bayar (Active if pending, Completed if verification/active) -->
+          <div class="step" [class.active]="item.status === 'pending_payment'"
+            [class.completed]="item.status === 'verification' || item.status === 'active' || item.status === 'verified'">
+            <div class="circle">
+              <ion-icon *ngIf="item.status === 'verification' || item.status === 'active' || item.status === 'verified'"
+                name="checkmark"></ion-icon>
+              <ion-icon *ngIf="item.status === 'pending_payment'" name="wallet-outline"></ion-icon>
+            </div>
+            <span>Bayar</span>
+          </div>
+
+          <!-- Step 3: Verifikasi (Active if verification, Completed if active) -->
+          <div class="step" [class.active]="item.status === 'verification'"
+            [class.completed]="item.status === 'active' || item.status === 'verified'">
+            <div class="circle">
+              <ion-icon name="checkmark-done" *ngIf="item.status === 'active' || item.status === 'verified'"></ion-icon>
+              <ion-icon name="search-outline" *ngIf="item.status === 'verification'"></ion-icon>
+            </div>
+            <span>Verifikasi</span>
+          </div>
+        </div>
+
+        <!-- Detail Grid -->
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Mata Pelajaran</label>
+            <span><ion-icon name="book-outline"></ion-icon> {{ item.mataPelajaran }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Tingkat</label>
+            <span><ion-icon name="school-outline"></ion-icon> {{ item.tingkatPendidikan }}</span>
+          </div>
+        </div>
+
+        <!-- Action Area: Pending Payment -->
+        <div *ngIf="item.status === 'pending_payment'" class="action-box warning">
+          <div class="message">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            Menunggu pembayaran
+          </div>
+
+          <!-- Payment Info Mini -->
+          <div class="payment-info-mini"
+            style="background:#fff; padding:12px; border-radius:8px; margin-bottom:12px; text-align:center; border:1px dashed #e0e0e0;">
+            <p style="margin:0 0 4px 0; font-size:0.8rem; color:#666;">Transfer ke:</p>
+            <div style="font-weight:bold; font-size:1.1rem; color:#0056b3;">BCA 123-456-7890</div>
+            <div style="font-size:0.8rem; color:#555;">a.n. MariBelajar Official</div>
+          </div>
+
+          <ion-button expand="block" shape="round" color="primary" class="upload-btn" (click)="selectFile(item.id)">
+            <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+            Upload Bukti Transfer
+          </ion-button>
+
+          <ion-button expand="block" fill="clear" color="danger" size="small" (click)="cancelRegistration(item.id)"
+            style="margin-top:8px;">
+            Batalkan Pendaftaran
+          </ion-button>
+        </div>
+
+        <!-- Action Area: Rejected -->
+        <div *ngIf="item.status === 'rejected'" class="action-box danger">
+          <div class="message" style="color:#d32f2f; display:flex; gap:8px; margin-bottom:0.5rem;">
+            <ion-icon name="close-circle"></ion-icon> Pendaftaran Ditolak
+          </div>
+          <p><strong>Alasan:</strong> {{ item.rejectionReason || 'Tidak ada alasan spesifik.' }}</p>
+          <p>Silakan daftar ulang atau hubungi admin.</p>
+        </div>
+
+        <!-- Action Area: Active/Verified -->
+        <div *ngIf="item.status === 'active' || item.status === 'verified'" class="action-box success">
+          <div class="message">
+            <ion-icon name="checkmark-circle"></ion-icon>
+            Pendaftaran Diterima!
+          </div>
+          <p style="margin-bottom:1rem; font-size:0.9rem; color:#666;">Silakan bergabung ke grup kelas:</p>
+          <ion-button expand="block" shape="round" color="success" href="https://chat.whatsapp.com/example-group-link"
+            target="_blank">
+            <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+            Gabung Grup WhatsApp
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>

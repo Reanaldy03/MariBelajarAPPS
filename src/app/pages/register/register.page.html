@@ -1,0 +1,60 @@
+<ion-content class="register-content">
+    <div class="register-container">
+        <!-- Back Button within Content -->
+        <div class="back-button-container">
+            <ion-button fill="clear" color="dark" routerLink="/login">
+                <ion-icon name="arrow-back-outline" slot="icon-only"></ion-icon>
+            </ion-button>
+        </div>
+
+        <div class="logo-section">
+            <img src="assets/logo.png" alt="MariBelajar" class="app-logo">
+            <h1>Buat Akun Baru</h1>
+            <p>Lengkapi data diri Anda untuk mendaftar</p>
+        </div>
+
+        <form (ngSubmit)="onRegister()" #registerForm="ngForm">
+            <ion-item class="input-item" lines="none">
+                <ion-icon name="person-outline" slot="start"></ion-icon>
+                <ion-input [(ngModel)]="fullName" name="fullName" type="text" placeholder="Nama Lengkap"
+                    required></ion-input>
+            </ion-item>
+
+            <ion-item class="input-item" lines="none">
+                <ion-icon name="call-outline" slot="start"></ion-icon>
+                <ion-input [(ngModel)]="phone" name="phone" type="tel" placeholder="Nomor Telepon (WhatsApp)"
+                    required></ion-input>
+            </ion-item>
+
+            <ion-item class="input-item" lines="none">
+                <ion-icon name="mail-outline" slot="start"></ion-icon>
+                <ion-input [(ngModel)]="email" name="email" type="email" placeholder="Email" required></ion-input>
+            </ion-item>
+
+            <ion-item class="input-item" lines="none">
+                <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+                <ion-input [(ngModel)]="password" name="password" [type]="showPassword ? 'text' : 'password'"
+                    placeholder="Password" required minlength="6"></ion-input>
+                <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="end"
+                    (click)="showPassword = !showPassword" class="password-toggle"></ion-icon>
+            </ion-item>
+
+            <ion-item class="input-item" lines="none">
+                <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+                <ion-input [(ngModel)]="confirmPassword" name="confirmPassword"
+                    [type]="showConfirmPassword ? 'text' : 'password'" placeholder="Konfirmasi Password"
+                    required></ion-input>
+                <ion-icon [name]="showConfirmPassword ? 'eye-off-outline' : 'eye-outline'" slot="end"
+                    (click)="showConfirmPassword = !showConfirmPassword" class="password-toggle"></ion-icon>
+            </ion-item>
+
+            <ion-button expand="block" type="submit" class="register-btn" [disabled]="!registerForm.form.valid">
+                Daftar Sekarang
+            </ion-button>
+        </form>
+
+        <div class="login-link">
+            <p>Sudah punya akun? <a routerLink="/login">Masuk disini</a></p>
+        </div>
+    </div>
+</ion-content>

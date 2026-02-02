@@ -1,0 +1,96 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title>Pusat Bantuan</ion-title>
+    <ion-buttons slot="end">
+      <div class="avatar-container" routerLink="/tabs/tab5">
+        <img *ngIf="userAvatar" [src]="userAvatar" alt="Profile" />
+        <ion-icon *ngIf="!userAvatar" name="person-circle-outline" class="fallback-icon"></ion-icon>
+      </div>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+
+  <!-- Floating Segment Control -->
+  <div class="ion-padding-top bg-light">
+    <ion-segment (ionChange)="segmentChanged($event)" [(ngModel)]="segment" value="faq" mode="ios">
+      <ion-segment-button value="faq">
+        <ion-label>FAQ</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="chat">
+        <ion-label>Live Chat</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <!-- FAQ SECTION -->
+  <div *ngIf="segment === 'faq'" class="faq-container ion-padding">
+    <h3 class="section-title">Apa yang bisa kami bantu?</h3>
+
+    <ion-accordion-group mode="ios" expand="inset">
+      <ion-accordion *ngFor="let item of faqs" value="{{item.question}}" toggleIcon="chevron-down-circle-outline">
+        <ion-item slot="header" lines="none">
+          <ion-icon name="help-buoy-outline" slot="start" color="primary"></ion-icon>
+          <ion-label>{{ item.question }}</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          {{ item.answer }}
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+
+    <div class="contact-card">
+      <ion-card>
+        <ion-card-content class="ion-text-center">
+          <p>Butuh bantuan langsung dari admin?</p>
+          <ion-button expand="block" shape="round" (click)="segment='chat'" color="primary">
+            <ion-icon name="chatbubbles" slot="start"></ion-icon>
+            Chat Admin Sekarang
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- CHAT SECTION -->
+  <div *ngIf="segment === 'chat'" class="chat-container">
+    <div class="messages-area" #content>
+
+      <div *ngIf="messages.length === 0" class="empty-chat">
+        <div
+          style="background: white; padding: 2rem; border-radius: 50%; margin-bottom: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+          <ion-icon name="chatbubbles-outline" color="primary"></ion-icon>
+        </div>
+        <p>Mulai percakapan dengan admin</p>
+        <small style="color:#999;">Biasanya membalas dalam 5 menit</small>
+      </div>
+
+      <div *ngFor="let msg of messages" class="message-bubble"
+        [ngClass]="{'my-message': msg.sender_role === 'user', 'other-message': msg.sender_role !== 'user'}">
+        <div class="bubble-content">
+          <p>{{ msg.message }}</p>
+          <span class="time">
+            {{ msg.created_at | date:'HH:mm' }}
+            <ion-icon name="checkmark-done-outline" *ngIf="msg.sender_role === 'user'"
+              style="margin-left:2px; vertical-align:middle;"></ion-icon>
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</ion-content>
+
+<!-- CHAT INPUT FOOTER -->
+<ion-footer *ngIf="segment === 'chat'" class="ion-no-border">
+  <ion-toolbar class="chat-input-bar">
+    <ion-item lines="none" class="input-item">
+      <ion-input placeholder="Ketik pesan Anda..." [(ngModel)]="newMessage" (keyup.enter)="sendMessage()"></ion-input>
+      <ion-button fill="clear" slot="end" (click)="sendMessage()" [disabled]="!newMessage.trim()" color="primary">
+        <ion-icon name="send" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>

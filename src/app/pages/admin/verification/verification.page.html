@@ -1,0 +1,107 @@
+<ion-header [translucent]="true" class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/admin/dashboard" text=""></ion-back-button>
+        </ion-buttons>
+        <ion-title>Detail Pendaftaran</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg-light">
+
+    <div *ngIf="isLoading" class="ion-text-center ion-padding mt-5">
+        <ion-spinner color="primary"></ion-spinner>
+        <p class="text-medium">Memuat data...</p>
+    </div>
+
+    <div *ngIf="!isLoading && data" class="content-wrapper">
+
+        <!-- Student Info Card -->
+        <ion-card class="custom-card student-card">
+            <ion-card-content>
+                <div class="card-header-row">
+                    <div class="id-badge">ID #{{ data.id }}</div>
+                    <ion-badge
+                        [color]="data.status === 'active' ? 'success' : (data.status === 'rejected' ? 'danger' : 'warning')">
+                        {{ data.status | uppercase }}
+                    </ion-badge>
+                </div>
+
+                <h2 class="student-name">{{ data.namaSiswa }}</h2>
+                <p class="student-program">{{ data.paket | titlecase }}</p>
+
+                <div class="divider"></div>
+
+                <ion-grid class="info-grid intro-grid">
+                    <ion-row>
+                        <ion-col size="6">
+                            <div class="info-label">Mata Pelajaran</div>
+                            <div class="info-value">{{ data.mataPelajaran }}</div>
+                        </ion-col>
+                        <ion-col size="6">
+                            <div class="info-label">Jenjang</div>
+                            <div class="info-value">{{ data.tingkatPendidikan }}</div>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="6">
+                            <div class="info-label">Metode</div>
+                            <div class="info-value">{{ data.metodePembelajaran }}</div>
+                        </ion-col>
+                        <ion-col size="6">
+                            <div class="info-label">Jadwal</div>
+                            <div class="info-value">{{ data.jadwalPilihan }}</div>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+
+                <div class="contact-section">
+                    <div class="phone-number">
+                        <ion-icon name="call-outline"></ion-icon>
+                        <span>{{ data.nomorTelepon }}</span>
+                    </div>
+                    <ion-button fill="outline" size="small" shape="round" (click)="whatsapp()" color="success">
+                        <ion-icon name="logo-whatsapp" slot="icon-only"></ion-icon>
+                    </ion-button>
+                </div>
+
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Payment Proof Card -->
+        <ion-card class="custom-card proof-card">
+            <ion-card-header>
+                <ion-card-title class="card-title">Bukti Pembayaran</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <div *ngIf="!data.paymentProof" class="empty-proof">
+                    <ion-icon name="image-outline"></ion-icon>
+                    <p>Belum ada bukti pembayaran diupload</p>
+                </div>
+                <div *ngIf="data.paymentProof" class="proof-image-container">
+                    <img [src]="getImageUrl(data.paymentProof)" alt="Bukti Pembayaran" />
+                    <ion-button fill="clear" expand="block"
+                        (click)="window.open(getImageUrl(data.paymentProof), '_system')">
+                        Lihat Ukuran Penuh
+                    </ion-button>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+    </div>
+
+</ion-content>
+
+<ion-footer *ngIf="!isLoading && data" class="ion-no-border">
+    <ion-toolbar class="footer-toolbar">
+        <div class="footer-buttons">
+            <ion-button expand="block" color="danger" fill="outline" class="action-btn" (click)="rejectPayment()">
+                Tolak
+            </ion-button>
+            <div class="spacer"></div>
+            <ion-button expand="block" color="success" class="action-btn" (click)="verifyPayment()">
+                Verifikasi
+            </ion-button>
+        </div>
+    </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,116 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="transparent" style="position: absolute; top:0; --background: transparent;">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/admin/dashboard" text="" color="light"></ion-back-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="bg-light">
+
+    <!-- Custom Header Background -->
+    <div class="form-header-bg">
+        <h2>{{ isEdit ? 'Edit Paket' : 'Tambah Paket' }}</h2>
+        <p>{{ isEdit ? 'Perbarui informasi paket belajar' : 'Buat paket belajar baru untuk siswa' }}</p>
+    </div>
+
+    <div *ngIf="isLoading" class="ion-text-center ion-padding mt-5">
+        <ion-spinner color="primary"></ion-spinner>
+        <p>Memuat data...</p>
+    </div>
+
+    <div *ngIf="!isLoading" class="form-wrapper">
+        <ion-card class="custom-card ion-padding">
+            <form (ngSubmit)="savePackage()">
+
+                <!-- Name -->
+                <div class="form-group">
+                    <ion-label class="form-label">Nama Paket <span class="required">*</span></ion-label>
+                    <ion-item lines="none" class="custom-input">
+                        <ion-icon name="pricetag" slot="start" class="input-icon"></ion-icon>
+                        <ion-input [(ngModel)]="pkg.name" name="name" placeholder="Contoh: Paket Juara SD"
+                            required></ion-input>
+                    </ion-item>
+                </div>
+
+                <!-- Price & Duration Grid -->
+                <ion-grid class="ion-no-padding">
+                    <ion-row>
+                        <ion-col size="6" class="ion-padding-end">
+                            <div class="form-group">
+                                <ion-label class="form-label">Harga <span class="required">*</span></ion-label>
+                                <ion-item lines="none" class="custom-input">
+                                    <ion-icon name="cash" slot="start" class="input-icon"></ion-icon>
+                                    <ion-input type="number" [(ngModel)]="pkg.price" name="price" placeholder="0"
+                                        required></ion-input>
+                                </ion-item>
+                            </div>
+                        </ion-col>
+                        <ion-col size="6" class="ion-padding-start">
+                            <div class="form-group">
+                                <ion-label class="form-label">Durasi</ion-label>
+                                <ion-item lines="none" class="custom-input">
+                                    <ion-icon name="time" slot="start" class="input-icon"></ion-icon>
+                                    <ion-select [(ngModel)]="pkg.duration" name="duration" interface="popover">
+                                        <ion-select-option *ngFor="let d of durations" [value]="d">{{ d
+                                            }}</ion-select-option>
+                                    </ion-select>
+                                </ion-item>
+                            </div>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+
+                <!-- Level -->
+                <div class="form-group">
+                    <ion-label class="form-label">Jenjang Pendidikan</ion-label>
+                    <ion-item lines="none" class="custom-input">
+                        <ion-icon name="school" slot="start" class="input-icon"></ion-icon>
+                        <ion-select [(ngModel)]="pkg.level" name="level" placeholder="Pilih Jenjang"
+                            interface="popover">
+                            <ion-select-option *ngFor="let lvl of levels" [value]="lvl">{{ lvl }}</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </div>
+
+                <!-- Subjects -->
+                <div class="form-group">
+                    <ion-label class="form-label">Mata Pelajaran</ion-label>
+                    <ion-item lines="none" class="custom-input">
+                        <ion-icon name="book" slot="start" class="input-icon"></ion-icon>
+                        <ion-input [(ngModel)]="pkg.subjects" name="subjects"
+                            placeholder="Matematika, IPA, Bahasa Inggris..."></ion-input>
+                    </ion-item>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <ion-label class="form-label">Deskripsi</ion-label>
+                    <ion-item lines="none" class="custom-input">
+                        <ion-textarea [(ngModel)]="pkg.description" name="description"
+                            placeholder="Deskripsi singkat tentang fasilitas paket..." rows="3"></ion-textarea>
+                    </ion-item>
+                </div>
+
+                <!-- Status Toggle (Card Style) -->
+                <ion-item lines="none" class="status-card" [class.active]="pkg.isActive" *ngIf="isEdit">
+                    <div class="toggle-label" slot="start">
+                        Status Paket
+                        <small>{{ pkg.isActive ? 'Paket Aktif & Terlihat' : 'Paket Disembunyikan' }}</small>
+                    </div>
+                    <ion-toggle [(ngModel)]="pkg.isActive" name="isActive" slot="end" color="success"
+                        mode="ios"></ion-toggle>
+                </ion-item>
+
+                <!-- Save Button -->
+                <div class="ion-margin-top">
+                    <ion-button expand="block" shape="round" type="submit" [disabled]="!pkg.name || !pkg.price"
+                        class="save-btn">
+                        {{ isEdit ? 'Simpan Perubahan' : 'Buat Paket Sekarang' }}
+                    </ion-button>
+                </div>
+
+            </form>
+        </ion-card>
+    </div>
+</ion-content>

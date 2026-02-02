@@ -1,0 +1,83 @@
+# .gitignore - MariBelajar Project
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+package-lock.json
+
+# Ionic
+www/
+platforms/
+plugins/
+.sourcemaps/
+
+# IDE - VSCode
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# IDE - Other
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/
+*.log
+lerna-debug.log*
+
+# Testing
+coverage/
+*.lcov
+.nyc_output
+
+# Build
+dist/
+build/
+.angular/
+
+# Environment
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Temporary files
+*.tmp
+*.temp
+.cache
+
+
+api-maribelajar/uploads/
+
+# Config (Sensitive)
+# Uncomment jika config berisi password production
+# api-maribelajar/config.php
+
+# Capacitor
+android/
+ios/
+.capacitor/
+
+# TypeScript
+*.tsbuildinfo

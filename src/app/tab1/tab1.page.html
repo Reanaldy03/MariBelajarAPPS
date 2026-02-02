@@ -1,0 +1,169 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="home-toolbar">
+    <div class="header-container">
+      <div class="user-info">
+        <h2 class="greeting">Halo, {{ userName }}! 👋</h2>
+        <p class="subtitle">Mau belajar apa hari ini?</p>
+      </div>
+      <div class="header-actions">
+        <div class="avatar-container" routerLink="/tabs/tab5">
+          <img [src]="userAvatar || 'assets/default-avatar.svg'" class="avatar-img"
+            onerror="this.src='assets/default-avatar.svg'">
+        </div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="home-content">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="main-container">
+    <!-- Promo Banner (Static for now, but actionable) -->
+    <div class="banner-section">
+      <div class="promo-card">
+        <div class="promo-text">
+          <span class="badge">PROMO</span>
+          <h3>Diskon 50% untuk<br>Pendaftaran Pertama!</h3>
+          <ion-button size="small" color="light" routerLink="/tabs/tab2" class="promo-btn">Daftar Sekarang</ion-button>
+        </div>
+        <img src="assets/icon/favicon.png" class="promo-img" alt="Promo"> <!-- Placeholder asset -->
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="section-title">
+      <h3>Kategori Belajar</h3>
+      <!-- <span class="see-all">Lihat Semua</span> -->
+    </div>
+
+    <div class="categories-scroll">
+      <div class="category-item" (click)="selectCategory('Matematika')">
+        <div class="cat-icon bg-red">
+          <ion-icon name="calculator-outline"></ion-icon>
+        </div>
+        <span>Matematika</span>
+      </div>
+      <div class="category-item" (click)="selectCategory('B. Inggris')">
+        <div class="cat-icon bg-blue">
+          <ion-icon name="language-outline"></ion-icon>
+        </div>
+        <span>B. Inggris</span>
+      </div>
+      <div class="category-item" (click)="selectCategory('Sains')">
+        <div class="cat-icon bg-green">
+          <ion-icon name="flask-outline"></ion-icon>
+        </div>
+        <span>Sains</span>
+      </div>
+      <div class="category-item" (click)="selectCategory('Komputer')">
+        <div class="cat-icon bg-orange">
+          <ion-icon name="code-slash-outline"></ion-icon>
+        </div>
+        <span>Komputer</span>
+      </div>
+      <div class="category-item" (click)="selectCategory('Musik')">
+        <div class="cat-icon bg-purple">
+          <ion-icon name="musical-notes-outline"></ion-icon>
+        </div>
+        <span>Musik</span>
+      </div>
+      <div class="category-item" (click)="selectCategory('Seni')">
+        <div class="cat-icon bg-teal">
+          <ion-icon name="color-palette-outline"></ion-icon>
+        </div>
+        <span>Seni</span>
+      </div>
+      <div class="category-item" (click)="selectCategory('Ekonomi')">
+        <div class="cat-icon bg-yellow">
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+        <span>Ekonomi</span>
+      </div>
+      <div class="category-item" (click)="selectCategory('Sejarah')">
+        <div class="cat-icon bg-brown">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        <span>Sejarah</span>
+      </div>
+    </div>
+
+    <!-- Popular Packages (Horizontal Scroll) -->
+    <div class="section-title">
+      <h3>Paket Populer</h3>
+      <span class="see-all" routerLink="/tabs/tab2">Lihat Semua</span>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading && packages.length === 0" class="horizontal-scroll">
+      <div class="package-card skeleton-card" *ngFor="let i of [1,2,3]">
+        <ion-skeleton-text animated style="width: 100%; height: 120px;"></ion-skeleton-text>
+        <div class="p-3">
+          <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 40%;"></ion-skeleton-text>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data State -->
+    <div class="horizontal-scroll" *ngIf="!isLoading">
+      <div class="package-card" *ngFor="let pkg of packages" [routerLink]="['/tabs/tab2']">
+        <!-- Navigate to register list for now -->
+        <div class="card-image-placeholder item-purple">
+          <ion-icon name="book-outline"></ion-icon>
+        </div>
+        <div class="card-content">
+          <div class="card-badges">
+            <span class="badge-level">{{ pkg.level }}</span>
+          </div>
+          <h4>{{ pkg.name }}</h4>
+          <p class="subjects">{{ pkg.subjects | slice:0:30 }}...</p>
+          <div class="card-footer">
+            <span class="price">Rp {{ pkg.price | number:'1.0-0' }}</span>
+            <ion-icon name="add-circle" color="primary"></ion-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="packages.length === 0" class="empty-packages">
+        <p>Belum ada paket tersedia saat ini.</p>
+      </div>
+    </div>
+
+    <!-- Testimonials (Refined) -->
+    <div class="section-title mt-4">
+      <h3>Apa Kata Mereka?</h3>
+    </div>
+
+    <div class="testimonial-list">
+      <div class="testimonial-item">
+        <div class="quote-icon">“</div>
+        <p>"Guru-gurunya sangat sabar dan materinya mudah dipahami. Nilai saya naik drastis!"</p>
+        <div class="user-profile">
+          <div class="initials">AP</div>
+          <div>
+            <h5>Andi Pratama</h5>
+            <span>Siswa SMA</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-item">
+        <div class="quote-icon">“</div>
+        <p>"Sangat terbantu untuk persiapan UTBK. Recommended banget buat yang mau masuk PTN."</p>
+        <div class="user-profile">
+          <div class="initials">SA</div>
+          <div>
+            <h5>Siti Aminah</h5>
+            <span>Mahasiswa UI</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-spacer"></div>
+
+  </div>
+</ion-content>

@@ -1,0 +1,147 @@
+/* Modern Package Form Styles */
+.bg-light {
+    --background: #f8f9fa;
+}
+
+/* Custom Header Area (Simulated) */
+.form-header-bg {
+    background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-tertiary) 100%);
+    padding: 30px 20px 60px;
+    margin-bottom: -40px;
+    text-align: center;
+    color: white;
+
+    h2 {
+        font-weight: 700;
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    p {
+        margin: 4px 0 0;
+        opacity: 0.9;
+        font-size: 0.9rem;
+    }
+}
+
+.form-wrapper {
+    padding: 0 16px 30px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.custom-card {
+    border-radius: 24px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    background: white;
+    margin: 0;
+    overflow: visible;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    margin-left: 2px;
+    margin-bottom: 8px;
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    .required {
+        color: var(--ion-color-danger);
+    }
+}
+
+.custom-input {
+    --background: #ffffff;
+    --border-radius: 16px;
+    --padding-start: 16px;
+    border-radius: 16px;
+    margin-top: 4px;
+    border: 2px solid #f0f0f0;
+    transition: border-color 0.2s;
+
+    &.item-has-focus {
+        border-color: var(--ion-color-primary);
+        box-shadow: 0 0 0 4px rgba(var(--ion-color-primary-rgb), 0.05);
+    }
+
+    .input-icon {
+        color: var(--ion-color-primary);
+        margin-right: 12px;
+        opacity: 0.8;
+    }
+
+    ion-input,
+    ion-textarea,
+    ion-select {
+        --padding-start: 0;
+        --color: #222 !important;
+        color: #222 !important;
+        --placeholder-color: #aaa;
+        font-weight: 500;
+    }
+
+    /* Specific fix for ion-select text */
+    ion-select::part(text) {
+        color: #222 !important;
+    }
+
+    ion-select::part(placeholder) {
+        color: #aaa !important;
+    }
+}
+
+/* Status Card */
+.status-card {
+    --background: #ffffff;
+    /* Force light background for ion-item */
+    background: #ffffff;
+    border-radius: 16px;
+    --padding-start: 16px;
+    --inner-padding-end: 16px;
+    margin-top: 24px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+
+    &.active {
+        --background: #f0fdf4;
+        /* Light green background when active */
+        background: #f0fdf4;
+        border: 1px solid var(--ion-color-success);
+
+        .toggle-label {
+            color: var(--ion-color-success-shade);
+        }
+    }
+}
+
+.toggle-label {
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    small {
+        font-weight: 400;
+        color: #666;
+        font-size: 0.8rem;
+    }
+}
+
+.save-btn {
+    --background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-tertiary) 100%);
+    --border-radius: 16px;
+    height: 52px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-top: 32px;
+    --box-shadow: 0 8px 20px rgba(var(--ion-color-primary-rgb), 0.3);
+    text-transform: capitalize;
+}

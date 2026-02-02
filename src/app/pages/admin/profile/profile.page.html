@@ -1,0 +1,138 @@
+<ion-content [fullscreen]="true" class="bg-light">
+
+    <!-- Custom Header Background (No Ion-Header to allow full scroll impact) -->
+    <div class="profile-header">
+        <div style="position: absolute; top: 1rem; left: 1rem; z-index: 10;">
+            <ion-back-button defaultHref="/admin/dashboard" text="" mode="md" style="--color: white;"></ion-back-button>
+        </div>
+
+        <div class="avatar-container" (click)="triggerFileInput()">
+            <img [src]="user?.avatar_url || 'assets/default-avatar.svg'" alt="Avatar" class="avatar-img"
+                onerror="this.onerror=null; this.src='assets/default-avatar.svg'">
+            <div class="avatar-overlay">
+                <ion-icon name="camera"></ion-icon>
+            </div>
+            <input type="file" id="avatar-input" (change)="onFileSelected($event)" accept="image/*" hidden>
+        </div>
+        <h2 class="profile-name">{{ user?.full_name || 'Pengguna' }}</h2>
+        <p class="profile-role">{{ user?.role | titlecase }}</p>
+    </div>
+
+    <div class="profile-content-wrapper">
+        <!-- Profile Info Section -->
+        <ion-card class="profile-card">
+            <ion-card-header>
+                <ion-card-title>
+                    <span>Informasi Pribadi</span>
+                    <ion-button fill="clear" size="small" (click)="toggleEdit()">
+                        <ion-icon slot="icon-only" [name]="isEditing ? 'close-outline' : 'create-outline'"></ion-icon>
+                        {{ isEditing ? '' : '' }}
+                    </ion-button>
+                </ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+                <ion-list lines="full" *ngIf="!isEditing">
+                    <ion-item>
+                        <ion-icon name="person-outline" slot="start" color="primary"></ion-icon>
+                        <ion-label>
+                            <p>Nama Lengkap</p>
+                            <h3>{{ user?.full_name }}</h3>
+                        </ion-label>
+                    </ion-item>
+                    <ion-item>
+                        <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
+                        <ion-label>
+                            <p>Email</p>
+                            <h3>{{ user?.email }}</h3>
+                        </ion-label>
+                    </ion-item>
+                    <ion-item lines="none">
+                        <ion-icon name="call-outline" slot="start" color="primary"></ion-icon>
+                        <ion-label>
+                            <p>Nomor Telepon</p>
+                            <h3>{{ user?.phone || '-' }}</h3>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+
+                <!-- Edit Form -->
+                <div *ngIf="isEditing" class="edit-form-container">
+                    <ion-item class="input-item" lines="none">
+                        <ion-label position="stacked">Nama Lengkap</ion-label>
+                        <ion-input [(ngModel)]="editData.name" type="text" placeholder="Masukkan nama"></ion-input>
+                    </ion-item>
+                    <ion-item class="input-item" lines="none">
+                        <ion-label position="stacked">Nomor Telepon</ion-label>
+                        <ion-input [(ngModel)]="editData.phone" type="tel"
+                            placeholder="Contoh: 08123456789"></ion-input>
+                    </ion-item>
+                    <div class="ion-margin-top text-right">
+                        <ion-button fill="clear" color="medium" (click)="toggleEdit()">Batal</ion-button>
+                        <ion-button (click)="saveProfile()" color="primary">Simpan</ion-button>
+                    </div>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- Security Section -->
+        <ion-card class="profile-card">
+            <ion-card-header>
+                <ion-card-title>
+                    <span>Keamanan</span>
+                    <ion-button fill="clear" size="small" (click)="toggleChangePassword()">
+                        <ion-icon slot="icon-only"
+                            [name]="isChangingPassword ? 'chevron-up-outline' : 'chevron-down-outline'"></ion-icon>
+                    </ion-button>
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content *ngIf="isChangingPassword">
+                <div class="edit-form-container">
+                    <ion-item class="input-item" lines="none">
+                        <ion-label position="stacked">Password Lama</ion-label>
+                        <ion-input [(ngModel)]="passwordData.old_password" type="password"></ion-input>
+                    </ion-item>
+                    <ion-item class="input-item" lines="none">
+                        <ion-label position="stacked">Password Baru</ion-label>
+                        <ion-input [(ngModel)]="passwordData.new_password" type="password"></ion-input>
+                    </ion-item>
+                    <ion-item class="input-item" lines="none">
+                        <ion-label position="stacked">Konfirmasi Password Baru</ion-label>
+                        <ion-input [(ngModel)]="passwordData.confirm_password" type="password"></ion-input>
+                    </ion-item>
+                    <div class="ion-margin-top">
+                        <ion-button expand="block" color="warning" (click)="submitChangePassword()">
+                            <ion-icon name="key-outline" slot="start"></ion-icon>
+                            Update Password
+                        </ion-button>
+                    </div>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+        <!-- About Section (Collapsible) -->
+        <ion-accordion-group class="ion-margin-top">
+            <ion-accordion value="about">
+                <ion-item slot="header" color="light">
+                    <ion-icon name="information-circle-outline" slot="start" color="tertiary"></ion-icon>
+                    <ion-label>Tentang Aplikasi</ion-label>
+                </ion-item>
+                <div class="ion-padding" slot="content">
+                    <div class="text-center">
+                        <h3 style="color: var(--ion-color-primary);">MariBelajar v1.0</h3>
+                        <p>Les Privat Terpercaya untuk Masa Depan Cerah</p>
+                        <p class="text-muted small">© 2026 MariBelajar. All rights reserved.</p>
+                    </div>
+                </div>
+            </ion-accordion>
+        </ion-accordion-group>
+
+        <div class="ion-padding-vertical">
+            <ion-button expand="block" color="danger" (click)="logout()" shape="round">
+                <ion-icon name="log-out-outline" slot="start"></ion-icon>
+                Keluar
+            </ion-button>
+        </div>
+    </div>
+
+</ion-content>

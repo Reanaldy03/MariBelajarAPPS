@@ -1,0 +1,46 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button defaultHref="/admin/chat-list" text=""></ion-back-button>
+        </ion-buttons>
+        <ion-title>Chat dengan {{ studentName }}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="chat-content">
+
+    <!-- Chat Messages -->
+    <div class="messages-wrapper" *ngIf="messages.length > 0">
+        <div *ngFor="let msg of messages" class="message-item"
+            [ngClass]="{'admin-message': msg.sender_role === 'admin', 'student-message': msg.sender_role !== 'admin'}">
+
+            <div class="message-bubble">
+                <p class="message-text">{{ msg.message }}</p>
+                <span class="message-time">{{ msg.created_at | date:'HH:mm' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="messages.length === 0" class="empty-chat">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+        <p>Belum ada percakapan</p>
+        <small>Mulai kirim pesan untuk memulai chat</small>
+    </div>
+
+</ion-content>
+
+<!-- Footer Input -->
+<ion-footer class="ion-no-border">
+    <ion-toolbar class="chat-input-toolbar">
+        <div class="input-wrapper">
+            <ion-textarea [(ngModel)]="newMessage" placeholder="Ketik pesan..." rows="1" autoGrow="true" maxlength="500"
+                (keydown)="onKeyPress($event)" class="chat-input">
+            </ion-textarea>
+            <ion-button (click)="sendMessage()" [disabled]="!newMessage.trim()" shape="round" color="primary"
+                class="send-button">
+                <ion-icon name="send" slot="icon-only"></ion-icon>
+            </ion-button>
+        </div>
+    </ion-toolbar>
+</ion-footer>

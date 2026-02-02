@@ -1,0 +1,171 @@
+.bg-light {
+    --background: #f8f9fa;
+}
+
+.content-wrapper {
+    padding-bottom: 80px;
+}
+
+.custom-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    /* Soft shadow */
+    margin: 16px;
+    border: none;
+    /* Remove border */
+    overflow: hidden;
+
+    ion-card-content {
+        padding: 20px;
+    }
+}
+
+.student-card {
+    .card-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+
+        .id-badge {
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: 600;
+            background: #f0f0f0;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+    }
+
+    .student-name {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #333;
+        /* Dark text on white bg */
+    }
+
+    .student-program {
+        margin: 4px 0 0;
+        color: var(--ion-color-primary);
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .divider {
+        height: 1px;
+        background: #f0f0f0;
+        margin: 20px 0;
+    }
+
+    .info-grid {
+        padding: 0;
+
+        ion-col {
+            padding: 0 0 16px 0;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #444;
+            font-weight: 500;
+        }
+    }
+
+    .contact-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f9f9f9;
+        padding: 12px 16px;
+        border-radius: 12px;
+        margin-top: 8px;
+
+        .phone-number {
+            display: flex;
+            align-items: center;
+            color: #333;
+            font-weight: 600;
+            font-size: 1rem;
+
+            ion-icon {
+                color: var(--ion-color-primary);
+                margin-right: 8px;
+                font-size: 1.2rem;
+            }
+        }
+    }
+}
+
+.proof-card {
+    .card-title {
+        color: #333;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .empty-proof {
+        text-align: center;
+        padding: 40px 0;
+        color: #aaa;
+        background: #f8f8f8;
+        border-radius: 12px;
+        border: 2px dashed #eee;
+
+        ion-icon {
+            font-size: 48px;
+            margin-bottom: 8px;
+            color: #ddd;
+        }
+
+        p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+    }
+
+    .proof-image-container {
+        text-align: center;
+
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            margin-bottom: 10px;
+        }
+    }
+}
+
+ion-footer {
+    background: white;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+
+    .footer-toolbar {
+        --background: white;
+        padding: 8px 16px;
+    }
+
+    .footer-buttons {
+        display: flex;
+        width: 100%;
+
+        .action-btn {
+            flex: 1;
+            margin: 0;
+            height: 48px;
+            --border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .spacer {
+            width: 16px;
+        }
+    }
+}
